@@ -5,9 +5,9 @@ function HomeButton(){
     const location = useLocation();
     const navigate = useNavigate();
     const handleButtonClick = () =>{
-        navigate("/");
+        navigate("/mahjong-calculator");
     }
-    if (location.pathname === '/') {
+    if (location.pathname === '/mahjong-calculator') {
         return null; 
     }
 

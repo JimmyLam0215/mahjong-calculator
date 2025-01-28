@@ -18,7 +18,7 @@ function App() {
        <Router>
             <HomeButton />
             <Routes>
-                <Route path="/" element={<Home />} />
+                <Route path="/mahjong-calculator" element={<Home />} />
                 <Route path="/setting" element={<Setting />} />
                 <Route path="/credits" element={<Credits />} />
                 <Route path="/points-table" element={<PointsTable />} />
