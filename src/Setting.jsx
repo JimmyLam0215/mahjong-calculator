@@ -67,7 +67,7 @@ function Setting() {
 
     const HandleSubmit = (event) => {
         event.preventDefault(); // Prevent the default form submission
-        navigate("/set-names");
+        navigate("/mahjong-calculator/set-names");
     }
 
     const HandleSetting = () => {

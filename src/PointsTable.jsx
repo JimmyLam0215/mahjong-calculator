@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 
 function PointsTable({ message }) {
-    console.log(message);
+    //console.log(message);
     const min = parseInt(message.min);
     const max = parseInt(message.max);
     const point = message.point;

@@ -20,7 +20,7 @@ function PromptNames() {
 
         // Update the names state
         setNames(newNames);
-        navigate('/main-page', { state: { names: newNames } });
+        navigate('/mahjong-calculator/main-page', { state: { names: newNames } });
     };
 
 

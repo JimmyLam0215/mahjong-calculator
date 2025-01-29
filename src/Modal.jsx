@@ -2,8 +2,8 @@ const Modal = ({ isOpen, onClose, onConfirm, onCancel }) => {
     if (!isOpen) return null;
 
     return (
-        <div className="modal">
-            <div className="modal-content">
+        <div className="modal-change">
+            <div className="modal-change-content">
                 <p>換人定換位?</p>
                 <button onClick={() => { onConfirm('replace'); onClose(); }}>換人</button>
                 <button onClick={() => { onConfirm('swap'); onClose(); }}>換位</button>

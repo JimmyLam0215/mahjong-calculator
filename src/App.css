@@ -178,6 +178,10 @@ button {
   color: black;
 }
 
+.modal-change {
+  align-items: center;
+}
+
 .close-button {
   position: absolute;
   top: 10px;

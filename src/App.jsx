@@ -19,11 +19,11 @@ function App() {
             <HomeButton />
             <Routes>
                 <Route path="/mahjong-calculator" element={<Home />} />
-                <Route path="/setting" element={<Setting />} />
-                <Route path="/credits" element={<Credits />} />
-                <Route path="/points-table" element={<PointsTable />} />
-                <Route path="/main-page" element={<MainPage />} />
-                <Route path="/set-names" element={<PromptNames />}/>
+                <Route path="/mahjong-calculator/setting" element={<Setting />} />
+                <Route path="/mahjong-calculator/credits" element={<Credits />} />
+                <Route path="/mahjong-calculator/points-table" element={<PointsTable />} />
+                <Route path="/mahjong-calculator/main-page" element={<MainPage />} />
+                <Route path="/mahjong-calculator/set-names" element={<PromptNames />}/>
             </Routes>
             <Footer />
         </Router>

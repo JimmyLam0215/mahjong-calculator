@@ -25,6 +25,7 @@ function MainPage() {
     const [showScoreSelection, setShowScoreSelection] = useState(false);
     const [winningUserId, setWinningUserId] = useState(null);
     const [payments, setPayments] = useState([]); 
+    const [isRestoreClicked, setIsRestoreClicked] = useState(false);
 
     useEffect(() => {
         const storedScores = JSON.parse(localStorage.getItem('userScores'));
@@ -39,6 +40,13 @@ function MainPage() {
             setUsers(initialUsers);
         }
     }, [names]);
+
+    /*useEffect(() => {
+        if (previousScores && isRestoreClicked) {
+            setUsers(previousScores);
+            setIsRestoreClicked(false);
+        }
+    }, [previousScores]);*/
     
     const HandleReplaceUser = () => {
         if (selectedUserId !== null && replacementType === 'replace') {
@@ -105,19 +113,23 @@ function MainPage() {
         const selfPointsList = pointsData.selfPointsList || [];
         const gameSettings = JSON.parse(localStorage.getItem('gameSetting')) || {};
         const loseValue = parseFloat(gameSettings.lose) || 0;
-
+    
         const winningPoints = pointsList[selectedFan] || 0;
         const losingPoints = losePointsList[selectedFan] || 0;
-
+    
+        // Store current scores before updating
+        const currentScores = [...users];
+        setPreviousScores(currentScores); // Set previous scores for restoration
+    
         setUsers(prevUsers => {
-            return prevUsers.map(user => {
+            const updatedUsers = prevUsers.map(user => {
                 let updatedScore = user.score;
-
+    
                 if (isSelfDraw) {
                     if (user.id === winningId) {
                         updatedScore += selfPointsList[selectedSelfDrawFan] || 0; 
                     } 
-                    
+    
                     if (isBaoSelfDraw && selectedBaoUserId && user.id === selectedBaoUserId) {
                         updatedScore -= selfPointsList[selectedSelfDrawFan] || 0; 
                     } else if (!isBaoSelfDraw && !selectedBaoUserId && (user.id !== winningId)) {
@@ -135,14 +147,17 @@ function MainPage() {
                 }
                 return { ...user, score: updatedScore }; 
             });
+    
+            // Update local storage after setting the users
+            localStorage.setItem('userScores', JSON.stringify(updatedUsers));
+            return updatedUsers; // Return the updated users array
         });
     
-        // Calculate payments based on scores
-        const calculatedPayments = settleScores(users);
-        console.log(calculatedPayments); // Log the payments for debugging
-        //setPayments(calculatedPayments); // Update the state with the calculated payments
-
-        localStorage.setItem('userScores', JSON.stringify(users));
+        // Calculate payments based on updated scores
+        // Use the updated state of users directly
+        const calculatedPayments = settleScores([...users]); // Pass the most recent users
+        //console.log(calculatedPayments); // Log the payments for debugging
+        // setPayments(calculatedPayments); // Uncomment to update the state with the calculated payments
     };
 
     const settleScores = (users) => {
@@ -184,9 +199,13 @@ function MainPage() {
 
     const HandleRestoreScores = () => {
         if (previousScores) {
+            setCurrentHost(currentHost > 0 ? (currentHost - 1) : 3);
+            setCurrentWind(currentWind > 0 ? (currentWind - 1) : 3);
+            setCurrentRound(currentWind < 3 ? currentRound : (currentRound === 0 ? 3 : (currentRound - 1)));
             setUsers(previousScores);
             localStorage.setItem('userScores', JSON.stringify(previousScores)); 
             setPreviousScores(null); 
+            setIsRestoreClicked(true); // Set this after updating users
         }
     };
     
@@ -202,13 +221,23 @@ function MainPage() {
         setNewHostId(null); 
     };
 
+    const HandleHostChangeCancel = () => {
+        setIsHostChange(false);
+    }
+
     const HandleClickEat = (id) => {
         setWinningUserId(id);
         setShowScoreSelection(true); 
-        setCurrentRound(currentWind === 3 ? (currentRound === 3 ? 0 : currentRound + 1) : currentRound);
+        setUsers(prevUsers => {
+            const updatedUsers = prevUsers.map(user => {
+                return user; // Return the user as is for now
+            });
+            return updatedUsers;
+        });
+        /*setCurrentRound(currentWind === 3 ? (currentRound === 3 ? 0 : currentRound + 1) : currentRound);
         setCurrentWind(currentWind === 3 ? 0 : currentWind + 1);
         if((id-1)!=currentHost)
-            setCurrentHost(currentHost === 3 ? 0 : currentHost + 1);
+            setCurrentHost(currentHost === 3 ? 0 : currentHost + 1);*/
     };
 
     const HandleSettleMoney = () => {
@@ -293,6 +322,12 @@ function MainPage() {
                             setShowScoreSelection(false);
                             HandleScoreIncrement(winningUserId, selectedFan, selectedLoserId, isSelfDraw, selectedSelfDrawFan, isBaoSelfDraw, selectedBaoUserId);
                         }}
+                        setCurrentRound={setCurrentRound}
+                        setCurrentWind={setCurrentWind}
+                        setCurrentHost={setCurrentHost}
+                        currentRound={currentRound}
+                        currentWind={currentWind}
+                        currentHost={currentHost}
                     />
                 )}
 
@@ -333,6 +368,7 @@ function MainPage() {
                             </div>
                         ))}
                         <button onClick={HandleHostChangeConfirm}>確定</button>
+                        <button onClick={HandleHostChangeCancel}>撳錯</button>
                     </div>
                     </>
                 )}

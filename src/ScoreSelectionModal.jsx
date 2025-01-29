@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const ScoreSelectionModal = ({ users, winningUser, onClose }) => {
+const ScoreSelectionModal = ({ users, winningUser, onClose, setCurrentRound, setCurrentWind, setCurrentHost, currentRound, currentWind, currentHost }) => {
     const gameSettings = JSON.parse(localStorage.getItem('gameSetting')) || {};
     const minFan = gameSettings.min || 0; 
     const maxFan = gameSettings.max || 3; 
@@ -16,15 +16,18 @@ const ScoreSelectionModal = ({ users, winningUser, onClose }) => {
 
     const handleConfirm = () => {
         // Log current state for debugging
-        console.log("Confirmed Values:", {
+        /*console.log("Confirmed Values:", {
             selectedFan,
             selectedLoserId,
             isSelfDraw,
             selectedSelfDrawFan,
             isBaoSelfDraw,
             selectedBaoUserId
-        });
-        
+        });*/
+        setCurrentRound(currentWind === 3 ? (currentRound === 3 ? 0 : currentRound + 1) : currentRound);
+        setCurrentWind(currentWind === 3 ? 0 : currentWind + 1);
+        if((winningUser-1)!=currentHost)
+            setCurrentHost(currentHost === 3 ? 0 : currentHost + 1);
         onClose(selectedFan, selectedLoserId, isSelfDraw, selectedSelfDrawFan, isBaoSelfDraw, selectedBaoUserId);
     };
 

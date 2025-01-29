@@ -4,10 +4,10 @@ function Home(){
     const navigate = useNavigate();
     const goSetting = () => {
         localStorage.clear();
-        navigate('/setting');
+        navigate('/mahjong-calculator/setting');
     }
     const goCredits = () => {
-        navigate('/credits');
+        navigate('/mahjong-calculator/credits');
     }
 
     const clearLocalStorage = () => {
